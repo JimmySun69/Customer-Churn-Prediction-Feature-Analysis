@@ -214,3 +214,15 @@ for name,classifier in Classifiers:
 
 #### Output
  ![ModelPrecision](ModelPrecision.PNG) 
+
+### Testing the Model
+```python
+SupervisionTotal = input("Please Enter the total price from Supervision Department: ")
+BlackcardTotal = input("Please Enter the total price from Blackcard Department: ")
+EcommerceTotal = input("Please Enter the total price from Ecommerce Department: ")
+OrderCount = input("Please Enter the total order number: ")
+TotalPrice = input("Please Enter the total price: ")
+CityID = input("Please Enter City ID: ")
+refundFee = input("Please Enter total refund fee: ")
+latestBuytime = input("Please Enter the lateset purchase timestamp: ")
+```
