@@ -114,4 +114,18 @@ Stored Procedure usging PostgreSQL, the data of this table is originated from va
  dataset.shape
  OUTPUT -> (11930, 10)
  ```
+ ### Casting datatype
+ ```python
+ dataset['city_id'] = dataset['city_id'].astype(int)
+ dataset['gender'] = dataset['gender'].astype(int)
+ dataset.info()
+ ```
+ ### Getting the correlation among each feature
+ ```python
+ plt.figure(figsize=(20,16))
+ ax = sns.heatmap(corr,xticklabels=corr.columns,linewidths=0.2,cmap="YlGnBu",annot=True)
+ plt.title("Correlation between Variables")
+ ```
+ 
+
  
