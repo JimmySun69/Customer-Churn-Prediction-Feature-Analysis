@@ -223,6 +223,29 @@ EcommerceTotal = input("Please Enter the total price from Ecommerce Department: 
 OrderCount = input("Please Enter the total order number: ")
 TotalPrice = input("Please Enter the total price: ")
 CityID = input("Please Enter City ID: ")
-refundFee = input("Please Enter total refund fee: ")
-latestBuytime = input("Please Enter the lateset purchase timestamp: ")
+RefundFee = input("Please Enter total refund fee: ")
+LatestBuytime = input("Please Enter the lateset purchase timestamp: ")
 ```
+```python
+INPUT -->
+Please Enter the total price from Supervision Department: 2000
+Please Enter the total price from Blackcard Department: 1000
+Please Enter the total price from Ecommerce Department: 0
+Please Enter the total order number: 5
+Please Enter the total price: 3000
+Please Enter City ID: 0101
+Please Enter total refund fee: 1200
+Please Enter the lateset purchase timestamp: 1622509894
+```
+#### Testing
+```python
+if model.predict([dataset1[-1]])==0:
+    print("The user seems not likely to be churn user")
+elif model.predict([dataset1[-1]])==1:
+    print("The user is likely to be churn user")
+```
+```python
+The user seems not likely to be churn user
+```
+
+
