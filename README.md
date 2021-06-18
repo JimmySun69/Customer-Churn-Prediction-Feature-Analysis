@@ -104,3 +104,14 @@ Stored Procedure usging PostgreSQL, the data of this table is originated from va
   %matplotlib inline
   ```
   
+ ### Let us read the data file under the same directory
+ ```python
+ dataset = pd.read_csv("dataset.csv")
+ ```
+ ### Dealing with the missing value
+ ```python
+ dataset.dropna(inplace=True)
+ dataset.shape
+ OUTPUT -> (11930, 10)
+ ```
+ 
