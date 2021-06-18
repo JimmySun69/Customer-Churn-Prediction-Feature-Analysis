@@ -22,13 +22,13 @@ from database using PostgreSQL:
 
 ### Data Preparation
 Stored Procedure usging PostgreSQL, the data of this table is originated from various tables in the database
-* uid,user_id to locate each user
-* addtime stands for the time for the user to be added into database
-* jianli_totalprice,heika_totalprice,tuangou_totalprice are sales from different department
-* min_buy_time: the earliest time to make a purchase 
-* max_but_time: the latest time to make a purchase
-* order_count is number of orders for each person
-* total_price is the total amount of purchase each person made
+  * uid,user_id to locate each user
+  * addtime stands for the time for the user to be added into database
+  * jianli_totalprice,heika_totalprice,tuangou_totalprice are sales from different department
+  * min_buy_time: the earliest time to make a purchase 
+  * max_but_time: the latest time to make a purchase
+  * order_count is number of orders for each person
+  * total_price is the total amount of purchase each person made
 
 
   ```sql
@@ -47,8 +47,8 @@ Stored Procedure usging PostgreSQL, the data of this table is originated from va
   * full_name is the name for each customer
   * gender 1:Male 2:Female
   * refund_fee is the sum of refund fee from Department 1,2 & 3
-  * Churn is decided by the max_buy_time, if it is after 2020-5-1, then churn will be 0, else it will be 1.
-  
+  * Churn is decided by the max_buy_time, if it is after 2020-5-1, then churn will be 0, else it will be 1.<br/>
+
   ```sql
   ALTER TABLE gathers_users ADD city_name VARCHAR(30) DEFAULT '';
   ALTER TABLE gathers_users ADD city_id VARCHAR(10) DEFAULT ''; 
@@ -57,3 +57,50 @@ Stored Procedure usging PostgreSQL, the data of this table is originated from va
   ALTER TABLE gathers_users ADD refund_fee int DEFAULT 0; 
   ALTER TABLE gathers_users ADD churn int DEFAULT 0; 
   ```
+  
+  * Query for necessary Features<br/>
+  ```sql
+  SELECT jianli_totalprice AS supervision_total, heika_totalprice AS blackcard_total, 
+         tuangou_totalprice AS ecommerce_total, order_count, total_price, city_id, 
+         gender, refund_fee, latest_timestamp AS last_buytime, churn
+  FROM gathers_users
+  ```
+ ### Import Python Libraries
+  ```python
+  import numpy as np
+  import pandas as pd
+  import os
+  import matplotlib.pyplot as plt
+  import seaborn as sns
+  from pylab import rcParams
+  import matplotlib.cm as cm
+  import sklearn
+  from sklearn import preprocessing
+  from sklearn.preprocessing import LabelEncoder
+  from sklearn.preprocessing import StandardScaler
+  from sklearn.model_selection import StratifiedShuffleSplit
+  from sklearn.ensemble import RandomForestClassifier
+  from sklearn.svm import SVC, LinearSVC
+  from sklearn.linear_model import LogisticRegression
+  from sklearn.neighbors import KNeighborsClassifier
+  from sklearn.naive_bayes import GaussianNB
+  from sklearn.tree import DecisionTreeClassifier
+  from xgboost import XGBClassifier
+  from catboost import CatBoostClassifier
+  from sklearn.ensemble import AdaBoostClassifier
+  from sklearn.ensemble import GradientBoostingClassifier
+  from sklearn.metrics import classification_report, precision_score, recall_score, f1_score
+  from sklearn.metrics import confusion_matrix
+  from sklearn.model_selection import GridSearchCV
+  from sklearn.metrics import make_scorer
+  from sklearn.ensemble import VotingClassifier
+  from sklearn.decomposition import PCA
+  from sklearn.cluster import KMeans
+  from sklearn.metrics import silhouette_score
+  from sklearn.impute import SimpleImputer
+  import warnings
+  warnings.filterwarnings('ignore')
+
+  %matplotlib inline
+  ```
+  
