@@ -126,6 +126,91 @@ Stored Procedure usging PostgreSQL, the data of this table is originated from va
  ax = sns.heatmap(corr,xticklabels=corr.columns,linewidths=0.2,cmap="YlGnBu",annot=True)
  plt.title("Correlation between Variables")
  ```
- 
+ #### Output
+ ![correlation](correlation.png) 
 
+ ### Coreelation between churn and other variables
+ ```python
+ plt.figure(figsize=(6,6))
+ churn_dummies.corr()['churn'].sort_values(ascending=False).plot(kind='bar')
+ plt.title("Correlation between churn and variables")
+ ```
+ #### Output
+ ![churnCorrelation](churnCorrelation.png)
  
+ ### Data Cleaning --> Standardization
+ ```python
+ dataset[['supervision_total','blackcard_total','ecommerce_total',
+         'order_count','total_price','city_id',
+         'refund_fee','last_buytime']]=scaler.transform(dataset[['supervision_total','blackcard_total','ecommerce_total',
+                          'order_count','total_price','city_id',
+                          'refund_fee','last_buytime']])
+ ```
+ 
+### Split data into training and testing dataset
+The dataset is split into 5 sets, 20% of the data will be used as testing data and 80% will be used for training
+```python
+sss= StratifiedShuffleSplit(n_splits=5,test_size=0.2,random_state=0)
+print(sss)
+print("Number of Split Group: ",sss.get_n_splits(X,Y))
+for train_index, test_index in sss.split(X,Y):
+    print('train: ', train_index, 'test: ',test_index)
+    X_train,X_test = X[train_index],X[test_index]
+    y_train,y_test = Y[train_index],Y[test_index]
+```
+#### Output
+```python
+StratifiedShuffleSplit(n_splits=5, random_state=0, test_size=0.2,
+            train_size=None)
+Number of Split Group:  5
+train:  [27518 25350 31239 ... 26746 31383  6500] test:  [49302 18267 17606 ...  7139  5775 34604]
+train:  [ 1603 38461 12414 ... 40911 19855 48721] test:  [29050 29934 43014 ...   941 46615  3955]
+train:  [30384 32239 49070 ...  3488 45979 30624] test:  [43636  2536 20470 ... 19075 33575  9731]
+train:  [36389 38236 16139 ... 10872 17285 44487] test:  [29083 13002 40794 ... 16074 30882  8728]
+train:  [20622 14637 35772 ... 34295 45231 17993] test:  [ 1963  4979  8548 ... 15161  9052  9424]
+```
+
+### Fitting the model
+Using 10 different classifier to yeild the highest accuracy
+ * Random Forest Classifier
+ * Support Vector Machine
+ * LogisticRegression
+ * KNN
+ * Naive Bayes
+ * Decision Tree
+ * AdaBoostClassifier
+ * GradientBoostingClassifier
+ * XGB
+ * CatBoost
+```python
+Classifiers=[["Random Forest",RandomForestClassifier()],
+             ["Support Vector Machine",SVC()],
+             ["LogisticRegression",LogisticRegression()],
+             ["KNN",KNeighborsClassifier(n_neighbors=5)],
+             ["Naive Bayes",GaussianNB()],
+             ["Decision Tree",DecisionTreeClassifier()],
+             ["AdaBoostClassifier", AdaBoostClassifier()],
+             ["GradientBoostingClassifier", GradientBoostingClassifier()],
+             ["XGB", XGBClassifier()],
+             ["CatBoost", CatBoostClassifier(logging_level='Silent')]  
+]
+
+Classify_result=[]
+names=[]
+prediction=[]
+for name,classifier in Classifiers:
+    classifier=classifier
+    classifier.fit(X_train,y_train)
+    y_pred=classifier.predict(X_test)
+    recall=recall_score(y_test,y_pred)
+    precision=precision_score(y_test,y_pred)
+    class_eva=pd.DataFrame([recall,precision])
+    Classify_result.append(class_eva)
+    name=pd.Series(name)
+    names.append(name)
+    y_pred=pd.Series(y_pred)
+    prediction.append(y_pred)
+```
+
+#### Output
+ ![ModelPrecision](ModelPrecision.PNG) 
