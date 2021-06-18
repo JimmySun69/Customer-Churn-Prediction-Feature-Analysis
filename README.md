@@ -20,3 +20,40 @@ from database using PostgreSQL:
 <li><b>churn</b>: (Dependent Variable) Date format integer --> Given that most recent purchase is after 2020-5-1, the user is not considerd as churn user, otherwise the churn returns 1 </li>
 </ol>
 
+### Data Preparation
+Stored Procedure usging PostgreSQL, the data of this table is originated from various tables in the database
+* uid,user_id to locate each user
+* addtime stands for the time for the user to be added into database
+* jianli_totalprice,heika_totalprice,tuangou_totalprice are sales from different department
+* min_buy_time: the earliest time to make a purchase 
+* max_but_time: the latest time to make a purchase
+* order_count is number of orders for each person
+* total_price is the total amount of purchase each person made
+
+
+  ```sql
+  CREATE TABLE gathers_users 
+  AS 
+  SELECT uid,user_id,MIN(addtime) AS addtime,
+  SUM(CASE WHEN leixing=1 THEN total_price ELSE 0 END) AS jianli_totalprice,
+  SUM(CASE WHEN leixing=2 THEN total_price ELSE 0 END) AS heika_totalprice,
+  SUM(CASE WHEN leixing=3 THEN total_price ELSE 0 END) AS tuangou_totalprice,
+  MIN(min_buy_time) AS min_buy_time,
+  MAX(max_buy_time) AS max_buy_time,
+  SUM(order_count) AS order_count,
+  SUM(total_price) AS total_price
+  ```
+  * City name and city ID are description of city
+  * full_name is the name for each customer
+  * gender 1:Male 2:Female
+  * refund_fee is the sum of refund fee from Department 1,2 & 3
+  * Churn is decided by the max_buy_time, if it is after 2020-5-1, then churn will be 0, else it will be 1.
+  
+  ```sql
+  ALTER TABLE gathers_users ADD city_name VARCHAR(30) DEFAULT '';
+  ALTER TABLE gathers_users ADD city_id VARCHAR(10) DEFAULT ''; 
+  ALTER TABLE gathers_users ADD full_name VARCHAR(50) DEFAULT ''; 
+  ALTER TABLE gathers_users ADD gender int DEFAULT NULL;
+  ALTER TABLE gathers_users ADD refund_fee int DEFAULT 0; 
+  ALTER TABLE gathers_users ADD churn int DEFAULT 0; 
+  ```
